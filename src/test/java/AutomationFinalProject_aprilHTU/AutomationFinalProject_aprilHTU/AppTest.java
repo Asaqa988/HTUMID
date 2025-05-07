@@ -105,6 +105,8 @@ public class AppTest {
 
 		System.out.println(ExpectedDepatureDate);
 		System.out.println(ActualDepatureDate);
+		
+		System.out.println("hussam");
 
 		Assert.assertEquals(ActualDepatureDate, ExpectedDepatureDate);
 
