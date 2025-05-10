@@ -5,7 +5,7 @@
     <classes>
       <class name="AutomationFinalProject_aprilHTU.AutomationFinalProject_aprilHTU.AppTest">
         <methods>
-          <include name="FLightDepatureDate"/>
+          <include name="CheckWebSiteLanaguage"/>
           <include name="AfterMyTest"/>
           <include name="mySetup"/>
         </methods>
