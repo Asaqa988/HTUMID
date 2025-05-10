@@ -1,5 +1,7 @@
 package AutomationFinalProject_aprilHTU.AutomationFinalProject_aprilHTU;
 
+import static org.testng.Assert.assertEquals;
+
 import java.security.Key;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -9,11 +11,14 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -23,6 +28,8 @@ public class AppTest {
 
 	WebDriver driver = new ChromeDriver();
 	String TheURL = "https://www.almosafer.com/en";
+
+	Random rand = new Random();
 
 	@BeforeTest
 	public void mySetup() {
@@ -90,7 +97,7 @@ public class AppTest {
 
 	}
 
-	@Test(priority = 6, enabled = true)
+	@Test(priority = 6, enabled = false)
 	public void FLightDepatureDate() {
 
 		List<WebElement> dates = driver.findElements(By.cssSelector(".sc-dXfzlN.iPVuSG"));
@@ -105,14 +112,14 @@ public class AppTest {
 
 		System.out.println(ExpectedDepatureDate);
 		System.out.println(ActualDepatureDate);
-		
+
 		System.out.println("hussam");
 
 		Assert.assertEquals(ActualDepatureDate, ExpectedDepatureDate);
 
 	}
 
-	@Test(priority = 7, enabled = true)
+	@Test(priority = 7, enabled = false)
 	public void FlightReturnDate() {
 
 		List<WebElement> dates = driver.findElements(By.cssSelector(".sc-dXfzlN.iPVuSG"));
@@ -132,19 +139,91 @@ public class AppTest {
 
 	}
 
-	@Test(priority = 8, enabled = false)
-	public void ChangeTheWebsiteLanaguage() {
+	@Test(priority = 8, enabled = true)
+	public void ChangeTheWebsiteLanaguage() throws InterruptedException {
+		Thread.sleep(2000);
+
+		String[] Websites = { "https://www.almosafer.com/en", "https://www.almosafer.com/ar" };
+		int RandomWebsite = rand.nextInt(Websites.length);
+		driver.get(Websites[RandomWebsite]);
+
+		if (driver.getCurrentUrl().contains("en")) {
+			String ExpectedLanaguage = "en";
+
+			String ActualLanaguge = driver.findElement(By.tagName("html")).getDomAttribute("lang");
+
+			Assert.assertEquals(ActualLanaguge, ExpectedLanaguage);
+		} else {
+			String ExpectedLanaguage = "ar";
+
+			String ActualLanaguge = driver.findElement(By.tagName("html")).getDomAttribute("lang");
+
+			Assert.assertEquals(ActualLanaguge, ExpectedLanaguage);
+		}
 
 	}
 
-	@Test(priority = 9, enabled = false)
+	@Test(priority = 9, enabled = true)
 	public void RandomlySelectCity() {
 
+		String[] EnglishCities = { "dubai", "jeddah", "riyadh" };
+		int randomEnglish = rand.nextInt(EnglishCities.length);
+		String[] ArabicCities = { "دبي", "جدة" };
+		int randomArabicCity = rand.nextInt(ArabicCities.length);
+		WebElement hotelTab = driver.findElement(By.id("uncontrolled-tab-example-tab-hotels"));
+		hotelTab.click();
+
+		WebElement SearchInput = driver.findElement(By.cssSelector(".sc-phbroq-2.uQFRS.AutoComplete__Input"));
+
+		if (driver.getCurrentUrl().contains("en")) {
+			SearchInput.sendKeys(EnglishCities[randomEnglish] + Keys.ENTER);
+		} else {
+			SearchInput.sendKeys(ArabicCities[randomArabicCity] + Keys.ENTER);
+
+		}
+
+		// WebElement UnorderedList =
+		// driver.findElement(By.cssSelector(".sc-phbroq-4.gGwzVo.AutoComplete__List"));
+
+		// UnorderedList.findElements(By.tagName("li")).get(1).click();
+
+		WebElement numberOfVistor = driver.findElement(By.cssSelector(".sc-tln3e3-1.gvrkTi"));
+
+		Select mySelect = new Select(numberOfVistor);
+		int selectOption = rand.nextInt(2);
+		mySelect.selectByIndex(selectOption);
+		;
+
+		WebElement SearchHotelButton = driver
+				.findElement(By.xpath("//button[@data-testid='HotelSearchBox__SearchButton']"));
+
+		SearchHotelButton.click();
 	}
 
-	@Test(priority = 10, enabled = false)
-	public void CheckTheResultsIsretrived() {
+	@Test(priority = 10, enabled = true)
+	public void CheckTheResultIsretrived() {
 
+//		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+//		WebElement resultsElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+//			    By.xpath("//span[@data-testid='srp_properties_found']")));
+//		
+//		String Results = resultsElement.getText();
+//
+//		boolean ActualResult =Results.contains("مكان") || Results.contains("stays");
+//		boolean ExpectedResult = true ; 
+//
+//		Assert.assertEquals(ActualResult, ExpectedResult);
+		
+		// or 
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+
+		// Get and print the readyState
+		String pageState = (String) js.executeScript("return document.readyState");
+		System.out.println("Page readyState: " + pageState);
+		
+		assertEquals(pageState, "complete");
+		
 	}
 
 	@AfterTest
